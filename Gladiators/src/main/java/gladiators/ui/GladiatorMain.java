@@ -1,21 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gladiators.ui;
 
-/**
- *
- * @author Henrik Hirvonen
- */
+import gladiators.logic.Logics;
+import static java.lang.System.out;
+import java.util.Scanner;
+
 public class GladiatorMain {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        System.out.println("hello gladiators!");
+        Logics gamelogics = new Logics();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Hello gladiator!");
+        System.out.println("What is your name?");
+        String heroName = scanner.nextLine();
+        if (!heroName.isEmpty()) {
+            gamelogics.newHero(heroName);
+        }
+
+        System.out.println("Welcome to the arena " + gamelogics.hero.getName() + "!");
+
     }
-    
+
 }
