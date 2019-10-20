@@ -1,7 +1,6 @@
 package gladiators.ui;
 
 import gladiators.logic.Logics;
-import static java.lang.System.out;
 import java.util.Scanner;
 
 public class GladiatorMain {
