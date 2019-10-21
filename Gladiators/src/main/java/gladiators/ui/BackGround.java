@@ -11,7 +11,7 @@ public class BackGround {
     public BackGround() {
         //backgrounds must be 600 x 800 pixels
         
-        this.path = "file:../Files/Images/background0000.png";
+        this.path = "file:../Files/Images/Backgrounds/background0000.png";
         Image image = new Image(this.path);
         this.imageview = new ImageView(image);
 
