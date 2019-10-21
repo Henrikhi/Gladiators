@@ -35,6 +35,8 @@ public class GladiatorMain extends Application {
                 gamelogics.enemy.getImageview());
 
         screen.getChildren().add(gamelogics.buttons.getQuickButton());
+        screen.getChildren().add(gamelogics.buttons.getHeavyButton());
+        screen.getChildren().add(gamelogics.buttons.getMenuButton());
         screen.getChildren().add(gamelogics.buttons.getRecoverButton());
         screen.getChildren().add(gamelogics.heroText);
         screen.getChildren().add(gamelogics.enemyText);

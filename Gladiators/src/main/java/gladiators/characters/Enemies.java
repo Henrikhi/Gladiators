@@ -15,8 +15,8 @@ public class Enemies {
     }
     
     private void init() {
-        Character cyclop = new Character("Cyclop", 150, 40, 40, "file:../Files/Images/Characters/Cyclop/cyclop0000.png");
-        Character goblin = new Character("Goblin", 75, 80, 20, "file:../Files/Images/Characters/Goblin/goblin0000.png");
+        Character cyclop = new Character("Cyclop", 150, 40, 40, "file:../Files/Images/Characters/Cyclop/cyclop1.png");
+        Character goblin = new Character("Goblin", 75, 80, 20, "file:../Files/Images/Characters/Goblin/goblin1.png");
         
         this.enemies.add(cyclop);
         this.enemies.add(goblin);
