@@ -20,8 +20,7 @@ public class GladiatorMain extends Application {
     @Override
     public void start(Stage stage) {
 
-        Logics gamelogics = new Logics();
-        gamelogics.newHero("Jukka");
+        Logics gamelogics = new Logics("Jukka");
         BackGround bg = new BackGround();
 
         Scanner scanner = new Scanner(System.in);
@@ -40,12 +39,18 @@ public class GladiatorMain extends Application {
         screen.getChildren().add(gamelogics.buttons.getRecoverButton());
         screen.getChildren().add(gamelogics.heroText);
         screen.getChildren().add(gamelogics.enemyText);
-        
-        
-        
-        
-        
+        screen.getChildren().add(gamelogics.infoText);
+
+        gamelogics.buttons.getQuickButton().setOnMouseClicked(click -> {
+            screen.getChildren().remove(gamelogics.enemy.getImageview());
+            gamelogics.quickClicked();
+            screen.getChildren().add(gamelogics.enemy.getImageview());
+            
+        });
+
         stage.setScene(new Scene(screen));
+        stage.setTitle("Gladiator");
+        stage.setResizable(false);
         stage.show();
     }
 

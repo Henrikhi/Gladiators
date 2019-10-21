@@ -77,7 +77,7 @@ public class Character {
         return this.hitpoints > 0;
     }
 
-    public int attack() {
+    public int quickAttack() {
         int randomNumber = this.random.nextInt(101);
         if (randomNumber > this.accuracy) {
             return 0;
@@ -85,14 +85,22 @@ public class Character {
         return this.strength;
     }
 
+    public int heavyAttack() {
+        int randomNumber = this.random.nextInt(51);
+        if (randomNumber > (this.accuracy / 2)) {
+            return 0;
+        }
+        return this.strength * 2;
+    }
+
     private void createImage() {
         Image image = new Image(this.imagePath);
         this.imageview = new ImageView(image);
     }
 
-    public void setHeroImageSettins(boolean isHero) {
+    public void setHeroImageSettings(boolean isHero) {
         if (isHero) {
-            this.imageview.setTranslateX(50);
+            this.imageview.setTranslateX(10);
             this.imageview.setTranslateY(120);
         } else {
             this.imageview.setTranslateX(450);
