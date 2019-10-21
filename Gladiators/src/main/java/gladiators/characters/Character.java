@@ -26,7 +26,7 @@ public class Character {
         createImage();
     }
 
-
+    
     public ImageView getImageview() {
         return imageview;
     }
