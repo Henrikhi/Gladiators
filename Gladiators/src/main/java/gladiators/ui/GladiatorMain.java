@@ -2,22 +2,35 @@ package gladiators.ui;
 
 import gladiators.logic.Logics;
 import java.util.Scanner;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
-public class GladiatorMain {
+public class GladiatorMain extends Application {
 
     public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) {
+
         Logics gamelogics = new Logics();
+        gamelogics.newHero("Jukka");
+        BackGround bg = new BackGround();
+
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Hello gladiator!");
-        System.out.println("What is your name?");
-        String heroName = scanner.nextLine();
-        if (!heroName.isEmpty()) {
-            gamelogics.newHero(heroName);
-        }
+        System.out.println("Welcome to the arena!");
 
-        System.out.println("Welcome to the arena " + gamelogics.hero.getName() + "!");
+        Pane screen = new Pane();
+        screen.getChildren().addAll(bg.getImageview(), gamelogics.hero.getImageview(), gamelogics.enemies.randomEnemy().getImageview());
 
+        stage.setScene(new Scene(screen));
+        stage.show();
     }
 
 }

@@ -1,6 +1,8 @@
 package gladiators.characters;
 
 import java.util.Random;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Character {
 
@@ -10,15 +12,26 @@ public class Character {
     private int accuracy;
     private int strength;
     private Random random;
+    private String imagePath;
+    private ImageView imageview;
 
-    public Character(String name, int hitpoints, int accuracy, int strength) {
+    public Character(String name, int hitpoints, int accuracy, int strength, String imagePath) {
         this.name = name;
         this.hitpoints = hitpoints;
         this.healthPotions = 0;
         this.accuracy = accuracy;
         this.strength = strength;
         this.random = new Random();
+        this.imagePath = imagePath;
+        createImage();
     }
+
+
+    public ImageView getImageview() {
+        return imageview;
+    }
+    
+    
 
     public String getName() {
         return name;
@@ -63,6 +76,21 @@ public class Character {
             return 0;
         }
         return this.strength;
+    }
+
+    private void createImage() {
+        Image image = new Image(this.imagePath);
+        this.imageview = new ImageView(image);
+    }
+    
+    public void setHeroImageSettins(boolean isHero) {
+        if (isHero) {
+            this.imageview.setTranslateX(50);
+            this.imageview.setTranslateY(120);
+        } else {
+            this.imageview.setTranslateX(450);
+            this.imageview.setTranslateY(-50);
+        }
     }
 
 }
