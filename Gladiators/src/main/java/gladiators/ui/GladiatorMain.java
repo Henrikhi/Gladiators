@@ -32,10 +32,17 @@ public class GladiatorMain extends Application {
         screen.setPrefSize(800, 600);
         screen.getChildren().addAll(bg.getImageview(),
                 gamelogics.hero.getImageview(),
-                gamelogics.enemies.randomEnemy().getImageview());
+                gamelogics.enemy.getImageview());
 
         screen.getChildren().add(gamelogics.buttons.getQuickButton());
-
+        screen.getChildren().add(gamelogics.buttons.getRecoverButton());
+        screen.getChildren().add(gamelogics.heroText);
+        screen.getChildren().add(gamelogics.enemyText);
+        
+        
+        
+        
+        
         stage.setScene(new Scene(screen));
         stage.show();
     }

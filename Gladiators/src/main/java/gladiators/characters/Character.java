@@ -1,6 +1,7 @@
 package gladiators.characters;
 
 import java.util.Random;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -8,6 +9,7 @@ public class Character {
 
     private String name;
     private int hitpoints;
+    private int maxHP;
     private int healthPotions;
     private int accuracy;
     private int strength;
@@ -15,9 +17,10 @@ public class Character {
     private String imagePath;
     private ImageView imageview;
 
-    public Character(String name, int hitpoints, int accuracy, int strength, String imagePath) {
+    public Character(String name, int maxHP, int accuracy, int strength, String imagePath) {
         this.name = name;
-        this.hitpoints = hitpoints;
+        this.maxHP = maxHP;
+        this.hitpoints = maxHP;
         this.healthPotions = 0;
         this.accuracy = accuracy;
         this.strength = strength;
@@ -26,12 +29,9 @@ public class Character {
         createImage();
     }
 
-    
     public ImageView getImageview() {
         return imageview;
     }
-    
-    
 
     public String getName() {
         return name;
@@ -53,12 +53,19 @@ public class Character {
         return hitpoints;
     }
 
+    public int getMaxHP() {
+        return maxHP;
+    }
+
     public boolean drinkHealthPotion() {
         if (this.healthPotions == 0) {
             return false;
         }
         this.healthPotions--;
         this.hitpoints += 50;
+        if (this.hitpoints > this.maxHP) {
+            this.hitpoints = this.maxHP;
+        }
         return true;
     }
 
@@ -82,15 +89,20 @@ public class Character {
         Image image = new Image(this.imagePath);
         this.imageview = new ImageView(image);
     }
-    
+
     public void setHeroImageSettins(boolean isHero) {
         if (isHero) {
             this.imageview.setTranslateX(50);
             this.imageview.setTranslateY(120);
         } else {
             this.imageview.setTranslateX(450);
-            this.imageview.setTranslateY(-50);
+            this.imageview.setTranslateY(0);
         }
+    }
+
+    public String getText() {
+        String text = "" + this.name + "\nHealth: " + this.hitpoints + "/" + this.maxHP;
+        return text;
     }
 
 }
