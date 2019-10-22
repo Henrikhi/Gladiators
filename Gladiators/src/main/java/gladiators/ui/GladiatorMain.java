@@ -1,17 +1,15 @@
 package gladiators.ui;
 
 import gladiators.logic.Logics;
-import java.util.Scanner;
 import javafx.application.Application;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class GladiatorMain extends Application {
+
+    static Logics gamelogics;
+    static Pane screen;
 
     public static void main(String[] args) {
         launch(args);
@@ -20,14 +18,34 @@ public class GladiatorMain extends Application {
     @Override
     public void start(Stage stage) {
 
-        Logics gamelogics = new Logics("Jukka");
-        BackGround bg = new BackGround();
+        this.gamelogics = new Logics("Jukka");
+        this.screen = initScreen();
 
-        Scanner scanner = new Scanner(System.in);
+        gamelogics.buttons.getQuickButton().setOnMouseClicked(click -> {
+            quickClicked();
+        });
 
-        System.out.println("Welcome to the arena!");
+        gamelogics.buttons.getHeavyButton().setOnMouseClicked(click -> {
+            heavyClicked();
+        });
 
+        gamelogics.buttons.getRecoverButton().setOnMouseClicked(click -> {
+            recoverClicked();
+        });
+
+        gamelogics.buttons.getMenuButton().setOnMouseClicked(click -> {
+            menuClicked();
+        });
+
+        stage.setScene(new Scene(screen));
+        stage.setTitle("Gladiator");
+        stage.setResizable(false);
+        stage.show();
+    }
+
+    private Pane initScreen() {
         Pane screen = new Pane();
+        BackGround bg = new BackGround();
         screen.setPrefSize(800, 600);
         screen.getChildren().addAll(bg.getImageview(),
                 gamelogics.hero.getImageview(),
@@ -40,18 +58,33 @@ public class GladiatorMain extends Application {
         screen.getChildren().add(gamelogics.heroText);
         screen.getChildren().add(gamelogics.enemyText);
         screen.getChildren().add(gamelogics.infoText);
+        return screen;
+    }
 
-        gamelogics.buttons.getQuickButton().setOnMouseClicked(click -> {
+    private void quickClicked() {
+        if (gamelogics.hero.isAlive()) {
             screen.getChildren().remove(gamelogics.enemy.getImageview());
             gamelogics.quickClicked();
             screen.getChildren().add(gamelogics.enemy.getImageview());
-            
-        });
+        }
+    }
 
-        stage.setScene(new Scene(screen));
-        stage.setTitle("Gladiator");
-        stage.setResizable(false);
-        stage.show();
+    private void heavyClicked() {
+        if (gamelogics.hero.isAlive()) {
+            screen.getChildren().remove(gamelogics.enemy.getImageview());
+            gamelogics.heavyClicked();
+            screen.getChildren().add(gamelogics.enemy.getImageview());
+        }
+    }
+
+    private void recoverClicked() {
+        if (gamelogics.hero.isAlive()) {
+            gamelogics.RecoverClicked();
+        }
+    }
+
+    private void menuClicked() {
+        System.exit(0);
     }
 
 }

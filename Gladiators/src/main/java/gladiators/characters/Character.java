@@ -1,7 +1,6 @@
 package gladiators.characters;
 
 import java.util.Random;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -37,24 +36,14 @@ public class Character {
         return name;
     }
 
-    public int getAccuracy() {
-        return accuracy;
-    }
-
-    public int getStrength() {
-        return strength;
-    }
-
     public int getHealthPotions() {
         return healthPotions;
     }
 
-    public int getHitpoints() {
-        return hitpoints;
-    }
-
-    public int getMaxHP() {
-        return maxHP;
+    public void giveHealthPotions(int howMany) {
+        if (howMany > 0) {
+            this.healthPotions += howMany;
+        }
     }
 
     public boolean drinkHealthPotion() {
@@ -71,6 +60,9 @@ public class Character {
 
     public void getHit(int dealtDamage) {
         this.hitpoints -= dealtDamage;
+        if (this.hitpoints < 0) {
+            this.hitpoints = 0;
+        }
     }
 
     public boolean isAlive() {
@@ -82,7 +74,7 @@ public class Character {
         if (randomNumber > this.accuracy) {
             return 0;
         }
-        return this.strength;
+        return (10 + this.random.nextInt(this.strength - 10));
     }
 
     public int heavyAttack() {
@@ -90,7 +82,7 @@ public class Character {
         if (randomNumber > (this.accuracy / 2)) {
             return 0;
         }
-        return this.strength * 2;
+        return (10 + this.random.nextInt(this.strength - 10)) * 2;
     }
 
     private void createImage() {

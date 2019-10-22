@@ -4,7 +4,7 @@ import gladiators.characters.Hero;
 import gladiators.characters.Enemies;
 import gladiators.characters.Character;
 import gladiators.ui.Buttons;
-import javafx.geometry.Insets;
+import java.util.Random;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 
@@ -17,11 +17,10 @@ public class Logics {
     public TextArea heroText;
     public TextArea enemyText;
     public TextArea infoText;
-    private boolean heroTurn;
+    private Random random;
 
     public Logics(String heroName) {
         this.hero = new Hero(heroName);
-        this.heroTurn = true;
         this.enemies = new Enemies();
         this.enemy = enemies.randomEnemy();
         this.buttons = new Buttons();
@@ -31,24 +30,25 @@ public class Logics {
         createEnemyText();
         createInfoText();
         createHeroText();
+        this.random = new Random();
     }
 
     private void createEnemyText() {
         this.enemyText.setTranslateX(570);
         this.enemyText.setTranslateY(350);
         this.enemyText.setPrefSize(220, 90);
-        this.enemyText.setText(this.enemy.getText());
         this.enemyText.setFont(new Font("Font.ARIEL", 25));
         this.enemyText.setEditable(false);
+        this.enemyText.setText(this.enemy.getText());
     }
 
     private void createHeroText() {
-        this.heroText.setText(this.hero.getText());
         this.heroText.setTranslateX(340);
         this.heroText.setTranslateY(350);
         this.heroText.setPrefSize(220, 90);
         this.heroText.setFont(new Font("Font.ARIEL", 25));
         this.heroText.setEditable(false);
+        this.heroText.setText(this.hero.getText());
     }
 
     private void createInfoText() {
@@ -59,37 +59,46 @@ public class Logics {
         this.infoText.setWrapText(true);
         this.infoText.setEditable(false);
         this.infoText.setText("Welcome to the arena " + this.hero.getName() + "!\n"
-                + "Your first opponent is " + this.enemy.getName() + ".");
+                + "Your first challenger is " + this.enemy.getName() + ".");
     }
 
     public void quickClicked() {
-        if (!this.heroTurn) {
-            return;
-        }
-//        this.heroTurn = false;
-
         int damage = this.hero.quickAttack();
         if (damage == 0) {
-            this.infoText.setText(this.infoText.getText() + "\n\nYou tried to attack your best, but missed your attack.");
-            this.infoText.appendText("");
+            missed(true);
         } else {
-            this.infoText.setText(this.infoText.getText() + "\n\nYou attack the " + this.enemy.getName() + " swiftly, "
-                    + "and manage to deal " + damage + " damage!");
-            this.infoText.appendText("");
-            this.enemy.getHit(damage);
-            if (this.enemy.isAlive()) {
-                this.enemyText.setText(this.enemy.getText());
-            } else {
-                enemyDied();
-            }
+            hit(damage, true, " swiftly");
         }
+    }
 
+    public void heavyClicked() {
+        int damage = this.hero.heavyAttack();
+        if (damage == 0) {
+            missed(true);
+        } else {
+            hit(damage, true, " with great power");
+        }
+    }
+
+    private void enemyGetsHit(int damage) {
+        this.enemy.getHit(damage);
+        if (this.enemy.isAlive()) {
+            this.enemyText.setText(this.enemy.getText());
+            enemyTurn();
+        } else {
+            enemyDied();
+        }
     }
 
     private void enemyDied() {
+        this.hero.addKill();
         this.infoText.setText(this.infoText.getText() + "\n\n" + this.enemy.getName()
                 + " did not survive your final blow.");
         this.infoText.appendText("");
+
+        if (this.random.nextInt(2) == 1) {
+            enemyDroppedPotion();
+        }
 
         this.enemy = this.enemies.randomEnemy();
         this.enemyText.setText(this.enemy.getText());
@@ -97,6 +106,131 @@ public class Logics {
                 + this.enemy.getName() + " has accepted your challenge!");
         this.infoText.appendText("");
 
+    }
+
+    public void RecoverClicked() {
+        if (this.hero.drinkHealthPotion()) {
+            this.infoText.setText(this.infoText.getText() + "\n\nYou drank a magical "
+                    + "potion and now you feel refreshed, hydrated and ready to "
+                    + "continue the fight!");
+            this.infoText.appendText("");
+            this.heroText.setText(this.hero.getText());
+            enemyTurn();
+        } else {
+            this.infoText.setText(this.infoText.getText() + "\n\nYou do not have "
+                    + "any magical potions left. What a shame.");
+            this.infoText.appendText("");
+        }
+
+    }
+
+    public void enemyTurn() {
+        int action = random.nextInt(2);
+        if (action == 0) {
+            enemyAttack(true);
+        }
+        if (action == 1) {
+            enemyAttack(false);
+        }
+
+    }
+
+    private void heroDied() {
+        this.infoText.setText(this.infoText.getText() + "\n\nYou died. You managed to defeat " + numberToString(this.hero.getKills())
+                + " opponents before you died. Better luck next time!.");
+        this.infoText.appendText("");
+    }
+
+    private void missed(boolean heroMissed) {
+        if (heroMissed) {
+            this.infoText.setText(this.infoText.getText() + "\n\nYou tried to attack your best, but missed your attack.");
+            this.infoText.appendText("");
+            enemyTurn();
+        } else {
+            this.infoText.setText(this.infoText.getText() + "\n\n" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
+            this.infoText.appendText("");
+        }
+    }
+
+    private void hit(int damage, boolean heroAttacked, String how) {
+        if (heroAttacked) {
+            this.infoText.setText(this.infoText.getText() + "\n\nYou attacked the " + this.enemy.getName() + how + ", "
+                    + "dealing " + damage + " damage!");
+            this.infoText.appendText("");
+            enemyGetsHit(damage);
+        } else {
+            this.infoText.setText(this.infoText.getText() + "\n\n" + this.enemy.getName() + " attacked you" + how + ", "
+                    + "dealing " + damage + " damage!");
+            this.infoText.appendText("");
+            this.hero.getHit(damage);
+            this.heroText.setText(this.hero.getText());
+        }
+    }
+
+    private void enemyAttack(boolean typeWasQuick) {
+        int damage = -1;
+
+        if (typeWasQuick) {
+            damage = enemy.quickAttack();
+        } else {
+            damage = enemy.heavyAttack();
+        }
+        if (damage == 0) {
+            missed(false);
+            return;
+        }
+
+        if (typeWasQuick) {
+            hit(damage, false, " swiftly");
+        } else {
+            hit(damage, false, " with great power");
+        }
+
+        if (!this.hero.isAlive()) {
+            heroDied();
+        }
+    }
+
+    private void enemyDroppedPotion() {
+        this.hero.giveHealthPotions(1);
+        this.infoText.setText(this.infoText.getText() + "\n\nThe " + this.enemy.getName() + " dropped "
+                + "a health potion. Now you have " + numberToString(this.hero.getHealthPotions()) + " health potions!");
+        this.infoText.appendText("");
+    }
+
+    private String numberToString(int number) {
+        if (number >= 10) {
+            return "" + number;
+        }
+
+        if (number == 9) {
+            return "nine";
+        }
+        if (number == 8) {
+            return "eight";
+        }
+        if (number == 7) {
+            return "seven";
+        }
+        if (number == 6) {
+            return "six";
+        }
+        if (number == 5) {
+            return "five";
+        }
+        if (number == 4) {
+            return "four";
+        }
+        if (number == 3) {
+            return "three";
+        }
+        if (number == 2) {
+            return "two";
+        }
+        if (number == 1) {
+            return "one";
+        }
+        return "no";
     }
 
 }
