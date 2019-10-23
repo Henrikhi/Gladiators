@@ -14,7 +14,6 @@ public class Character {
     private int strength;
     private Random random;
     private String imagePath;
-    private ImageView imageview;
 
     public Character(String name, int maxHP, int accuracy, int strength, String imagePath) {
         this.name = name;
@@ -25,11 +24,10 @@ public class Character {
         this.strength = strength;
         this.random = new Random();
         this.imagePath = imagePath;
-        createImage();
     }
 
-    public ImageView getImageview() {
-        return imageview;
+    public String getImagePath() {
+        return imagePath;
     }
 
     public String getName() {
@@ -83,21 +81,6 @@ public class Character {
             return 0;
         }
         return (10 + this.random.nextInt(this.strength - 10)) * 2;
-    }
-
-    private void createImage() {
-        Image image = new Image(this.imagePath);
-        this.imageview = new ImageView(image);
-    }
-
-    public void setHeroImageSettings(boolean isHero) {
-        if (isHero) {
-            this.imageview.setTranslateX(10);
-            this.imageview.setTranslateY(120);
-        } else {
-            this.imageview.setTranslateX(450);
-            this.imageview.setTranslateY(0);
-        }
     }
 
     public String getText() {

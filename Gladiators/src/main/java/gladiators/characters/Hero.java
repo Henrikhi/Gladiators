@@ -5,9 +5,8 @@ public class Hero extends Character {
     private int kills;
 
     public Hero(String name) {
-        super(name, 100, 70, 30, "file:../Files/Images/Characters/Hero/hero1.png");
+        super(name, 100, 70, 30, "file:../Files/Images/Characters/Hero/heroGif1.gif");
         this.kills = 0;
-        setHeroImageSettings(true);
         giveHealthPotions(3);
     }
 
