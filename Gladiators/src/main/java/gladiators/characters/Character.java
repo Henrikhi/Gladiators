@@ -13,9 +13,14 @@ public class Character {
     private int accuracy;
     private int strength;
     private Random random;
-    private String imagePath;
+    private String idlePath;
+    private String quickPath;
+    private String heavyPath;
+    private int idleSpeed;
+    private int quickSpeed;
+    private int heavySpeed;
 
-    public Character(String name, int maxHP, int accuracy, int strength, String imagePath) {
+    public Character(String name, int maxHP, int accuracy, int strength, String idlePath, int idleSpeed, String quickPath, int quickSpeed, String heavyPath, int heavySpeed) {
         this.name = name;
         this.maxHP = maxHP;
         this.hitpoints = maxHP;
@@ -23,11 +28,36 @@ public class Character {
         this.accuracy = accuracy;
         this.strength = strength;
         this.random = new Random();
-        this.imagePath = imagePath;
+        this.idlePath = idlePath;
+        this.quickPath = quickPath;
+        this.heavyPath = heavyPath;
+        this.idleSpeed = idleSpeed;
+        this.quickSpeed = quickSpeed;
+        this.heavySpeed = heavySpeed;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getIdlePath() {
+        return idlePath;
+    }
+
+    public String getQuickPath() {
+        return quickPath;
+    }
+
+    public String getHeavyPath() {
+        return heavyPath;
+    }
+
+    public int getIdleSpeed() {
+        return idleSpeed;
+    }
+
+    public int getQuickSpeed() {
+        return quickSpeed;
+    }
+
+    public int getHeavySpeed() {
+        return heavySpeed;
     }
 
     public String getName() {

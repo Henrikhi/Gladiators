@@ -1,6 +1,8 @@
 package gladiators.ui;
 
+import gladiators.logic.GifDecoder;
 import gladiators.logic.Logics;
+import static gladiators.ui.GladiatorMain.gamelogics;
 import java.awt.image.BufferedImage;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
@@ -18,8 +20,12 @@ public class GladiatorMain extends Application {
 
     static Logics gamelogics;
     static Pane screen;
-    static Animation heroAnimation;
-    static Animation enemyAnimation;
+    static Animation heroIdle;
+    static Animation heroQuick;
+    static Animation heroHeavy;
+    static Animation enemyIdle;
+    static Animation enemyQuick;
+    static Animation enemyHeavy;
 
     public static void main(String[] args) {
         launch(args);
@@ -30,6 +36,8 @@ public class GladiatorMain extends Application {
 
         this.gamelogics = new Logics("Jukka");
         this.screen = initScreen();
+
+        animationInit();
 
         gamelogics.buttons.getQuickButton().setOnMouseClicked(click -> {
             quickClicked();
@@ -58,8 +66,8 @@ public class GladiatorMain extends Application {
             gif.setTranslateX(10);
             gif.setTranslateY(120);
         } else {
-            gif.setTranslateX(450);
-            gif.setTranslateY(0);
+            gif.setTranslateX(180); //450
+            gif.setTranslateY(0); //0
         }
         return gif;
     }
@@ -68,18 +76,9 @@ public class GladiatorMain extends Application {
         Pane screen = new Pane();
         BackGround bg = new BackGround();
 
-        this.heroAnimation = new AnimatedGif(gamelogics.hero.getImagePath(), 400);
-        this.heroAnimation.setCycleCount(1);
-        this.heroAnimation.imageView = setImageSettings(this.heroAnimation.imageView, true);
-
-        this.enemyAnimation = null;
-        refreshEnemyAnimation();
-
         screen.setPrefSize(800, 600);
-        screen.getChildren().addAll(bg.getImageview(),
-                this.heroAnimation.getView(),
-                this.enemyAnimation.getView());
 
+        screen.getChildren().add(bg.getImageview());
         screen.getChildren().add(gamelogics.buttons.getQuickButton());
         screen.getChildren().add(gamelogics.buttons.getHeavyButton());
         screen.getChildren().add(gamelogics.buttons.getMenuButton());
@@ -90,29 +89,93 @@ public class GladiatorMain extends Application {
         return screen;
     }
 
+    private void animationInit() {
+        this.heroQuick = new AnimatedGif(gamelogics.hero.getQuickPath(), gamelogics.hero.getQuickSpeed());
+        this.heroQuick.setCycleCount(1);
+        this.heroQuick.imageView = setImageSettings(this.heroQuick.imageView, true);
+
+        this.heroHeavy = new AnimatedGif(gamelogics.hero.getHeavyPath(), gamelogics.hero.getHeavySpeed());
+        this.heroHeavy.setCycleCount(1);
+        this.heroHeavy.imageView = setImageSettings(this.heroHeavy.imageView, true);
+
+        this.enemyQuick = new AnimatedGif(gamelogics.enemy.getQuickPath(), gamelogics.enemy.getQuickSpeed());
+        this.enemyQuick.setCycleCount(1);
+        this.enemyQuick.imageView = setImageSettings(this.enemyQuick.imageView, true);
+
+        this.enemyHeavy = new AnimatedGif(gamelogics.enemy.getHeavyPath(), gamelogics.enemy.getHeavySpeed());
+        this.enemyHeavy.setCycleCount(1);
+        this.enemyHeavy.imageView = setImageSettings(this.enemyHeavy.imageView, true);
+
+        this.enemyIdle = new AnimatedGif(gamelogics.enemy.getIdlePath(), gamelogics.enemy.getIdleSpeed());
+        this.enemyIdle.setCycleCount(-1);
+        this.enemyIdle.imageView = setImageSettings(this.enemyIdle.imageView, false);
+
+        this.heroIdle = new AnimatedGif(gamelogics.hero.getIdlePath(), gamelogics.hero.getIdleSpeed());
+        this.heroIdle.setCycleCount(-1);
+        this.heroIdle.imageView = setImageSettings(this.heroIdle.imageView, true);
+
+        heroIdle.play();
+        enemyIdle.play();
+
+        this.screen.getChildren().add(heroIdle.getView());
+        this.screen.getChildren().add(enemyIdle.getView());
+
+    }
+
     private void quickClicked() {
         if (gamelogics.hero.isAlive()) {
-            this.heroAnimation.play();
-            screen.getChildren().remove(this.enemyAnimation.getView());
-            gamelogics.quickClicked();
-            refreshEnemyAnimation();
-            screen.getChildren().add(this.enemyAnimation.getView());
+            animateHeroQuick();
+
+            int damage = gamelogics.hero.quickAttack();
+            if (damage == 0) {
+                gamelogics.missed(true);
+            } else {
+                gamelogics.hit(damage, true, " swiftly");
+            }
+
+            if (gamelogics.enemy.isAlive()) {
+                enemyTurn();
+            } else {
+                gamelogics.enemyDied();
+                this.screen.getChildren().remove(enemyIdle.getView());
+                this.enemyIdle = new AnimatedGif(gamelogics.enemy.getIdlePath(), gamelogics.enemy.getIdleSpeed());
+                this.enemyIdle.setCycleCount(-1);
+                this.enemyIdle.play();
+                this.enemyIdle.imageView = setImageSettings(this.enemyIdle.imageView, false);
+                this.screen.getChildren().add(enemyIdle.getView());
+            }
         }
     }
 
     private void heavyClicked() {
         if (gamelogics.hero.isAlive()) {
-            this.heroAnimation.play();
-            screen.getChildren().remove(this.enemyAnimation.getView());
-            gamelogics.heavyClicked();
-            refreshEnemyAnimation();
-            screen.getChildren().add(this.enemyAnimation.getView());
+            animateHeroHeavy();
+            int damage = gamelogics.hero.heavyAttack();
+            if (damage == 0) {
+                gamelogics.missed(true);
+            } else {
+                gamelogics.hit(damage, true, " with great power");
+            }
+
+            if (gamelogics.enemy.isAlive()) {
+                enemyTurn();
+            } else {
+                gamelogics.enemyDied();
+                this.screen.getChildren().remove(enemyIdle.getView());
+                this.enemyIdle = new AnimatedGif(gamelogics.enemy.getIdlePath(), gamelogics.enemy.getIdleSpeed());
+                this.enemyIdle.setCycleCount(-1);
+                this.enemyIdle.play();
+                this.enemyIdle.imageView = setImageSettings(this.enemyIdle.imageView, false);
+                this.screen.getChildren().add(enemyIdle.getView());
+            }
         }
     }
 
     private void recoverClicked() {
         if (gamelogics.hero.isAlive()) {
-            gamelogics.RecoverClicked();
+            if (gamelogics.RecoverClicked()) {
+                enemyTurn();
+            }
         }
     }
 
@@ -120,10 +183,57 @@ public class GladiatorMain extends Application {
         System.exit(0);
     }
 
-    private void refreshEnemyAnimation() {
-        this.enemyAnimation = new AnimatedGif(gamelogics.enemy.getImagePath(), 400);
-        this.enemyAnimation.setCycleCount(1);
-        this.enemyAnimation.imageView = setImageSettings(this.enemyAnimation.imageView, false);
+    private void animateHeroQuick() {
+        this.screen.getChildren().remove(heroIdle.getView());
+        this.screen.getChildren().add(heroQuick.getView());
+        this.heroQuick.play();
+        this.heroQuick.setOnFinished(attEnds -> {
+            this.screen.getChildren().remove(heroQuick.getView());
+            this.screen.getChildren().add(heroIdle.getView());
+        });
+
+    }
+
+    private void animateHeroHeavy() {
+        this.screen.getChildren().remove(heroIdle.getView());
+        this.screen.getChildren().add(heroHeavy.getView());
+        this.heroHeavy.play();
+        this.heroHeavy.setOnFinished(attEnds -> {
+            this.screen.getChildren().remove(heroHeavy.getView());
+            this.screen.getChildren().add(heroIdle.getView());
+        });
+
+    }
+
+    public void animateEnemyQuick() {
+        this.screen.getChildren().remove(enemyIdle.getView());
+        this.screen.getChildren().add(enemyQuick.getView());
+        this.enemyQuick.play();
+        this.enemyQuick.setOnFinished(attEnds -> {
+            this.screen.getChildren().remove(enemyQuick.getView());
+            this.screen.getChildren().add(enemyIdle.getView());
+        });
+    }
+
+    public void animateEnemyHeavy() {
+        this.screen.getChildren().remove(enemyIdle.getView());
+        this.screen.getChildren().add(enemyHeavy.getView());
+        this.enemyHeavy.play();
+        this.enemyHeavy.setOnFinished(attEnds -> {
+            this.screen.getChildren().remove(enemyHeavy.getView());
+            this.screen.getChildren().add(enemyIdle.getView());
+        });
+    }
+
+    private void enemyTurn() {
+        int action = gamelogics.enemyTurn();
+        if (action == 0) {
+            animateEnemyQuick();
+            gamelogics.enemyAttack(true);
+        } else if (action == 1) {
+            animateEnemyHeavy();
+            gamelogics.enemyAttack(false);
+        }
     }
 
     public class AnimatedGif extends Animation {

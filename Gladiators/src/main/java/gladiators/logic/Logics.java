@@ -62,15 +62,6 @@ public class Logics {
                 + "Your first challenger is " + this.enemy.getName() + ".");
     }
 
-    public void quickClicked() {
-        int damage = this.hero.quickAttack();
-        if (damage == 0) {
-            missed(true);
-        } else {
-            hit(damage, true, " swiftly");
-        }
-    }
-
     public void heavyClicked() {
         int damage = this.hero.heavyAttack();
         if (damage == 0) {
@@ -84,13 +75,10 @@ public class Logics {
         this.enemy.getHit(damage);
         if (this.enemy.isAlive()) {
             this.enemyText.setText(this.enemy.getText());
-            enemyTurn();
-        } else {
-            enemyDied();
         }
     }
 
-    private void enemyDied() {
+    public void enemyDied() {
         this.hero.addKill();
         this.infoText.setText(this.infoText.getText() + "\n\n" + this.enemy.getName()
                 + " did not survive your final blow.");
@@ -99,7 +87,6 @@ public class Logics {
         if (this.random.nextInt(2) == 1) {
             enemyDroppedPotion();
         }
-
         this.enemy = this.enemies.randomEnemy();
         this.enemyText.setText(this.enemy.getText());
         this.infoText.setText(this.infoText.getText() + "\n\nA new opponent "
@@ -108,31 +95,24 @@ public class Logics {
 
     }
 
-    public void RecoverClicked() {
+    public boolean RecoverClicked() {
         if (this.hero.drinkHealthPotion()) {
             this.infoText.setText(this.infoText.getText() + "\n\nYou drank a magical "
                     + "potion and now you feel refreshed, hydrated and ready to "
                     + "continue the fight!");
             this.infoText.appendText("");
             this.heroText.setText(this.hero.getText());
-            enemyTurn();
+            return true;
         } else {
             this.infoText.setText(this.infoText.getText() + "\n\nYou do not have "
                     + "any magical potions left. What a shame.");
             this.infoText.appendText("");
+            return false;
         }
-
     }
 
-    public void enemyTurn() {
-        int action = random.nextInt(2);
-        if (action == 0) {
-            enemyAttack(true);
-        }
-        if (action == 1) {
-            enemyAttack(false);
-        }
-
+    public int enemyTurn() {
+        return random.nextInt(2);
     }
 
     private void heroDied() {
@@ -141,18 +121,17 @@ public class Logics {
         this.infoText.appendText("");
     }
 
-    private void missed(boolean heroMissed) {
+    public void missed(boolean heroMissed) {
         if (heroMissed) {
             this.infoText.setText(this.infoText.getText() + "\n\nYou tried to attack your best, but missed your attack.");
             this.infoText.appendText("");
-            enemyTurn();
         } else {
             this.infoText.setText(this.infoText.getText() + "\n\n" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
             this.infoText.appendText("");
         }
     }
 
-    private void hit(int damage, boolean heroAttacked, String how) {
+    public void hit(int damage, boolean heroAttacked, String how) {
         if (heroAttacked) {
             this.infoText.setText(this.infoText.getText() + "\n\nYou attacked the " + this.enemy.getName() + how + ", "
                     + "dealing " + damage + " damage!");
@@ -167,7 +146,7 @@ public class Logics {
         }
     }
 
-    private void enemyAttack(boolean typeWasQuick) {
+    public void enemyAttack(boolean typeWasQuick) {
         int damage = -1;
 
         if (typeWasQuick) {
