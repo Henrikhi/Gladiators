@@ -187,6 +187,7 @@ public class GladiatorMain extends Application {
     private void animateEnemyDeath() {
         this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
         this.animations.createEnemyDeath(this.gamelogics.getEnemy().getDeathPath(), this.gamelogics.getEnemy().getDeathSpeed());
+        this.screen.getChildren().add(this.animations.getEnemyDeath().getView());
         this.animations.getEnemyDeath().play();
         this.animations.getEnemyDeath().setOnFinished(actionEnds -> {
             this.screen.getChildren().remove(this.animations.getEnemyDeath().getView());
@@ -207,13 +208,6 @@ public class GladiatorMain extends Application {
             }
         } else {
             animateEnemyDeath();
-
-//            this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
-//            this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
-//            this.animations.getEnemyIdle().play();
-//            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
-//            this.gamelogics.activateButtons();
-//            this.gamelogics.updateTextBoxes();
         }
     }
 
