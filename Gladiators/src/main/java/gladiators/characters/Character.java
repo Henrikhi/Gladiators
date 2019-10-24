@@ -13,14 +13,20 @@ public class Character {
     private String idlePath;
     private String quickPath;
     private String heavyPath;
+    private String entryPath;
+    private String deathPath;
     private int idleSpeed;
     private int quickSpeed;
     private int heavySpeed;
+    private int entrySpeed;
+    private int deathSpeed;
 
     public Character(String name, int maxHP, int accuracy, int strength,
             String idlePath, int idleSpeed,
             String quickPath, int quickSpeed,
-            String heavyPath, int heavySpeed) {
+            String heavyPath, int heavySpeed,
+            String entryPath, int entrySpeed,
+            String deathPath, int deathSpeed) {
         this.name = name;
         this.maxHP = maxHP;
         this.hitpoints = maxHP;
@@ -30,9 +36,13 @@ public class Character {
         this.idlePath = idlePath;
         this.quickPath = quickPath;
         this.heavyPath = heavyPath;
+        this.entryPath = entryPath;
+        this.deathPath = deathPath;
         this.idleSpeed = idleSpeed;
         this.quickSpeed = quickSpeed;
         this.heavySpeed = heavySpeed;
+        this.entrySpeed = entrySpeed;
+        this.deathSpeed = deathSpeed;
     }
 
     public String getIdlePath() {
@@ -47,6 +57,14 @@ public class Character {
         return heavyPath;
     }
 
+    public String getEntryPath() {
+        return entryPath;
+    }
+
+    public String getDeathPath() {
+        return deathPath;
+    }
+
     public int getIdleSpeed() {
         return idleSpeed;
     }
@@ -57,6 +75,14 @@ public class Character {
 
     public int getHeavySpeed() {
         return heavySpeed;
+    }
+
+    public int getEntrySpeed() {
+        return entrySpeed;
+    }
+
+    public int getDeathSpeed() {
+        return deathSpeed;
     }
 
     public String getName() {
@@ -99,7 +125,7 @@ public class Character {
 
     public String getText() {
         String text = "" + this.name + "\nHealth: " + this.hitpoints + "/" + this.maxHP;
-        return text;
+        return text.toUpperCase();
     }
 
 }

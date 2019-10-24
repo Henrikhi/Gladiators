@@ -159,16 +159,40 @@ public class GladiatorMain extends Application {
         animateHero(this.animations.getHeroHeavy(), this.animations.getHeroIdle());
     }
 
-    public void animateEnemyQuick() {
+    private void animateHeroEntry() {
+
+    }
+
+    private void animateHeroDeath() {
+
+    }
+
+    private void animateEnemyQuick() {
         this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
         this.animations.createEnemyQuick(this.gamelogics.getEnemy().getQuickPath(), this.gamelogics.getEnemy().getQuickSpeed());
         animateEnemy(this.animations.getEnemyQuick(), this.animations.getEnemyIdle());
     }
 
-    public void animateEnemyHeavy() {
+    private void animateEnemyHeavy() {
         this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
         this.animations.createEnemyHeavy(this.gamelogics.getEnemy().getHeavyPath(), this.gamelogics.getEnemy().getHeavySpeed());
         animateEnemy(this.animations.getEnemyHeavy(), this.animations.getEnemyIdle());
+    }
+
+    private void animateEnemyEntry() {
+        this.animations.createEnemyEntry(this.gamelogics.getEnemy().getEntryPath(), this.gamelogics.getEnemy().getEntrySpeed());
+        animateEnemy(this.animations.getEnemyEntry(), this.animations.getEnemyIdle());
+    }
+
+    private void animateEnemyDeath() {
+        this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
+        this.animations.createEnemyDeath(this.gamelogics.getEnemy().getDeathPath(), this.gamelogics.getEnemy().getDeathSpeed());
+        this.animations.getEnemyDeath().play();
+        this.animations.getEnemyDeath().setOnFinished(actionEnds -> {
+            this.screen.getChildren().remove(this.animations.getEnemyDeath().getView());
+            this.gamelogics.enemyDied();
+            animateEnemyEntry();
+        });
     }
 
     private void enemyTurn() {
@@ -182,13 +206,14 @@ public class GladiatorMain extends Application {
                 this.gamelogics.enemyAttack(false);
             }
         } else {
-            this.gamelogics.enemyDied();
-            this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
-            this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
-            this.animations.getEnemyIdle().play();
-            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
-            this.gamelogics.activateButtons();
-            this.gamelogics.updateTextBoxes();
+            animateEnemyDeath();
+
+//            this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
+//            this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
+//            this.animations.getEnemyIdle().play();
+//            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
+//            this.gamelogics.activateButtons();
+//            this.gamelogics.updateTextBoxes();
         }
     }
 

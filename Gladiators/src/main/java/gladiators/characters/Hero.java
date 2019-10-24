@@ -11,7 +11,9 @@ public class Hero extends Character {
         super(name, 100, 70, 30,
                 "file:../Files/Images/Characters/Hero/heroIdle.gif", 2000,
                 "file:../Files/Images/Characters/Hero/heroQuick.gif", 1000,
-                "file:../Files/Images/Characters/Hero/heroHeavy.gif", 1000);
+                "file:../Files/Images/Characters/Hero/heroHeavy.gif", 1000,
+                "file:../Files/Images/Characters/Hero/heroPotion.gif", 1000,
+                "file:../Files/Images/Characters/Hero/heroPotion.gif", 1000);
         this.potionPath = "file:../Files/Images/Characters/Hero/heroPotion.gif";
         this.potionSpeed = 2000;
         this.kills = 0;

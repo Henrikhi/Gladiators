@@ -16,9 +16,13 @@ public class Animations {
     private Animation heroQuick;
     private Animation heroHeavy;
     private Animation heroPotion;
+    private Animation heroEntry;
+    private Animation heroDeath;
     private Animation enemyIdle;
     private Animation enemyQuick;
     private Animation enemyHeavy;
+    private Animation enemyEntry;
+    private Animation enemyDeath;
 
     public Animations() {
     }
@@ -39,6 +43,18 @@ public class Animations {
         this.heroHeavy = new AnimatedGif(path, speed);
         this.heroHeavy.setCycleCount(1);
         this.heroHeavy.imageView = setImageSettings(this.heroHeavy.imageView, true);
+    }
+
+    public void createHeroEntry(String path, int speed) {
+        this.heroEntry = new AnimatedGif(path, speed);
+        this.heroEntry.setCycleCount(1);
+        this.heroEntry.imageView = setImageSettings(this.heroEntry.imageView, true);
+    }
+
+    public void createHeroDeath(String path, int speed) {
+        this.heroDeath = new AnimatedGif(path, speed);
+        this.heroDeath.setCycleCount(1);
+        this.heroDeath.imageView = setImageSettings(this.heroDeath.imageView, true);
     }
 
     public void createHeroPotion(String path, int speed) {
@@ -63,7 +79,18 @@ public class Animations {
         this.enemyHeavy = new AnimatedGif(path, speed);
         this.enemyHeavy.setCycleCount(1);
         this.enemyHeavy.imageView = setImageSettings(this.enemyHeavy.imageView, false);
+    }
 
+    public void createEnemyEntry(String path, int speed) {
+        this.enemyEntry = new AnimatedGif(path, speed);
+        this.enemyEntry.setCycleCount(1);
+        this.enemyEntry.imageView = setImageSettings(this.enemyEntry.imageView, false);
+    }
+
+    public void createEnemyDeath(String path, int speed) {
+        this.enemyDeath = new AnimatedGif(path, speed);
+        this.enemyDeath.setCycleCount(1);
+        this.enemyDeath.imageView = setImageSettings(this.enemyDeath.imageView, false);
     }
 
     public ImageView setImageSettings(ImageView gif, boolean isHero) {
@@ -89,6 +116,14 @@ public class Animations {
         return heroHeavy;
     }
 
+    public Animation getHeroEntry() {
+        return heroEntry;
+    }
+
+    public Animation getHeroDeath() {
+        return heroDeath;
+    }
+
     public Animation getHeroPotion() {
         return heroPotion;
     }
@@ -103,6 +138,14 @@ public class Animations {
 
     public Animation getEnemyHeavy() {
         return enemyHeavy;
+    }
+
+    public Animation getEnemyEntry() {
+        return enemyEntry;
+    }
+
+    public Animation getEnemyDeath() {
+        return enemyDeath;
     }
 
     public String getAnimationToString(Animation ani) {
