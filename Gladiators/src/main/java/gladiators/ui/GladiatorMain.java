@@ -2,6 +2,7 @@ package gladiators.ui;
 
 import gladiators.logic.Logics;
 import gladiators.music.Music;
+import gladiators.ui.Animations.Animation;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,7 @@ public class GladiatorMain extends Application {
     private Pane screen;
     private Music music;
     private Animations animations;
+    private int animationsRunning = 0;
 
     public static void main(String[] args) {
         launch(args);
@@ -74,6 +76,7 @@ public class GladiatorMain extends Application {
         this.animations.createHeroIdle(this.gamelogics.getHero().getIdlePath(), this.gamelogics.getHero().getIdleSpeed());
         this.animations.createHeroQuick(this.gamelogics.getHero().getQuickPath(), this.gamelogics.getHero().getQuickSpeed());
         this.animations.createHeroHeavy(this.gamelogics.getHero().getHeavyPath(), this.gamelogics.getHero().getHeavySpeed());
+        this.animations.createHeroPotion(this.gamelogics.getHero().getPotionPath(), this.gamelogics.getHero().getPotionSpeed());
         this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
         this.animations.createEnemyQuick(this.gamelogics.getEnemy().getQuickPath(), this.gamelogics.getEnemy().getQuickSpeed());
         this.animations.createEnemyHeavy(this.gamelogics.getEnemy().getHeavyPath(), this.gamelogics.getEnemy().getHeavySpeed());
@@ -85,22 +88,11 @@ public class GladiatorMain extends Application {
     private void quickClicked() {
         if (this.gamelogics.getHero().isAlive()) {
             animateHeroQuick();
-
             int damage = this.gamelogics.getHero().quickAttack();
             if (damage == 0) {
                 this.gamelogics.missed(true);
             } else {
                 this.gamelogics.hit(damage, true, " swiftly");
-            }
-
-            if (this.gamelogics.getEnemy().isAlive()) {
-                enemyTurn();
-            } else {
-                this.gamelogics.enemyDied();
-                this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
-                this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
-                this.animations.getEnemyIdle().play();
-                this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
             }
         }
     }
@@ -114,23 +106,13 @@ public class GladiatorMain extends Application {
             } else {
                 this.gamelogics.hit(damage, true, " with great power");
             }
-
-            if (this.gamelogics.getEnemy().isAlive()) {
-                enemyTurn();
-            } else {
-                this.gamelogics.enemyDied();
-                this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
-                this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
-                this.animations.getEnemyIdle().play();
-                this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
-            }
         }
     }
 
     private void recoverClicked() {
         if (this.gamelogics.getHero().isAlive()) {
             if (this.gamelogics.RecoverClicked()) {
-                enemyTurn();
+                animateHeroPotion();
             }
         }
     }
@@ -139,60 +121,74 @@ public class GladiatorMain extends Application {
         System.exit(0);
     }
 
+    private void animateHero(Animation action, Animation idle) {
+        this.gamelogics.disactivateButtons();
+        this.screen.getChildren().add(action.getView());
+        action.play();
+        action.setOnFinished(actionEnds -> {
+            this.screen.getChildren().remove(action.getView());
+            this.screen.getChildren().add(idle.getView());
+            this.gamelogics.updateTextBoxes();
+            enemyTurn();
+        });
+    }
+
+    private void animateEnemy(Animation action, Animation idle) {
+        this.screen.getChildren().add(action.getView());
+        action.play();
+        action.setOnFinished(actionEnds -> {
+            this.screen.getChildren().remove(action.getView());
+            this.screen.getChildren().add(idle.getView());
+            this.gamelogics.activateButtons();
+            this.gamelogics.updateTextBoxes();
+        });
+    }
+
+    private void animateHeroPotion() {
+        this.screen.getChildren().remove(this.animations.getHeroIdle().getView());
+        animateHero(this.animations.getHeroPotion(), this.animations.getHeroIdle());
+    }
+
     private void animateHeroQuick() {
         this.screen.getChildren().remove(this.animations.getHeroIdle().getView());
-//        createHeroQuick();
-        this.screen.getChildren().add(this.animations.getHeroQuick().getView());
-        this.animations.getHeroQuick().play();
-        this.animations.getHeroQuick().setOnFinished(attEnds -> {
-            this.screen.getChildren().remove(this.animations.getHeroQuick().getView());
-            this.screen.getChildren().add(this.animations.getHeroIdle().getView());
-        });
-
+        animateHero(this.animations.getHeroQuick(), this.animations.getHeroIdle());
     }
 
     private void animateHeroHeavy() {
         this.screen.getChildren().remove(this.animations.getHeroIdle().getView());
-//        createHeroHeavy();
-        this.screen.getChildren().add(this.animations.getHeroHeavy().getView());
-        this.animations.getHeroHeavy().play();
-        this.animations.getHeroHeavy().setOnFinished(attEnds -> {
-            this.screen.getChildren().remove(this.animations.getHeroHeavy().getView());
-            this.screen.getChildren().add(this.animations.getHeroIdle().getView());
-        });
-
+        animateHero(this.animations.getHeroHeavy(), this.animations.getHeroIdle());
     }
 
     public void animateEnemyQuick() {
         this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
         this.animations.createEnemyQuick(this.gamelogics.getEnemy().getQuickPath(), this.gamelogics.getEnemy().getQuickSpeed());
-        this.screen.getChildren().add(this.animations.getEnemyQuick().getView());
-        this.animations.getEnemyQuick().play();
-        this.animations.getEnemyQuick().setOnFinished(attEnds -> {
-            this.screen.getChildren().remove(this.animations.getEnemyQuick().getView());
-            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
-        });
+        animateEnemy(this.animations.getEnemyQuick(), this.animations.getEnemyIdle());
     }
 
     public void animateEnemyHeavy() {
         this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
         this.animations.createEnemyHeavy(this.gamelogics.getEnemy().getHeavyPath(), this.gamelogics.getEnemy().getHeavySpeed());
-        this.screen.getChildren().add(this.animations.getEnemyHeavy().getView());
-        this.animations.getEnemyHeavy().play();
-        this.animations.getEnemyHeavy().setOnFinished(attEnds -> {
-            this.screen.getChildren().remove(this.animations.getEnemyHeavy().getView());
-            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
-        });
+        animateEnemy(this.animations.getEnemyHeavy(), this.animations.getEnemyIdle());
     }
 
     private void enemyTurn() {
-        int action = this.gamelogics.enemyTurn();
-        if (action == 0) {
-            animateEnemyQuick();
-            this.gamelogics.enemyAttack(true);
-        } else if (action == 1) {
-            animateEnemyHeavy();
-            this.gamelogics.enemyAttack(false);
+        if (this.gamelogics.getEnemy().isAlive()) {
+            int action = this.gamelogics.enemyTurn();
+            if (action == 0) {
+                animateEnemyQuick();
+                this.gamelogics.enemyAttack(true);
+            } else if (action == 1) {
+                animateEnemyHeavy();
+                this.gamelogics.enemyAttack(false);
+            }
+        } else {
+            this.gamelogics.enemyDied();
+            this.screen.getChildren().remove(this.animations.getEnemyIdle().getView());
+            this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
+            this.animations.getEnemyIdle().play();
+            this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
+            this.gamelogics.activateButtons();
+            this.gamelogics.updateTextBoxes();
         }
     }
 

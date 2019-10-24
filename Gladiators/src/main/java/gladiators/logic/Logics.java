@@ -54,37 +54,39 @@ public class Logics {
     }
 
     private void enemyGetsHit(int damage) {
-        this.enemy.getHit(damage);
+        this.enemy.gotDamaged(damage);
         if (this.enemy.isAlive()) {
-            this.textboxes.updateEnemyText(enemy.getText());
+            this.textboxes.updateEnemyTextOld(enemy.getText());
         }
     }
 
     public void enemyDied() {
         this.hero.addKill();
-        this.textboxes.addInfoText("\n\n" + this.enemy.getName()
+        this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName()
                 + " did not survive your final blow.");
 
         if (this.random.nextInt(2) == 1) {
             enemyDroppedPotion();
         }
         this.enemy = this.enemies.randomEnemy();
-        this.textboxes.updateEnemyText(this.enemy.getText());
-        this.textboxes.addInfoText("\n\nA new opponent "
+        this.textboxes.updateEnemyTextOld(this.enemy.getText());
+        this.textboxes.addInfoTextOld("\n\nA new opponent "
                 + this.enemy.getName() + " has accepted your challenge!");
-
     }
 
     public boolean RecoverClicked() {
         if (this.hero.drinkHealthPotion()) {
-            this.textboxes.addInfoText("\n\nYou drank a magical "
+            this.textboxes.addInfoTextOld("\n\nYou drank a magical "
                     + "potion and now you feel refreshed, hydrated and ready to "
-                    + "continue the fight!");
-            this.textboxes.updateHeroText(this.hero.getText());
+                    + "continue the fight! You have "
+                    + numberToString(this.hero.getHealthPotions())
+                    + " magical potions left.");
+            this.textboxes.updateHeroTextOld(this.hero.getText());
             return true;
         } else {
-            this.textboxes.addInfoText("\n\nYou do not have "
+            this.textboxes.addInfoTextOld("\n\nYou do not have "
                     + "any magical potions left. What a shame.");
+            updateTextBoxes();
             return false;
         }
     }
@@ -94,28 +96,28 @@ public class Logics {
     }
 
     private void heroDied() {
-        this.textboxes.addInfoText("\n\nYou died. You managed to defeat " + numberToString(this.hero.getKills())
+        this.textboxes.addInfoTextOld("\n\nYou died. You managed to defeat " + numberToString(this.hero.getKills())
                 + " opponents before you died. Better luck next time!.");
     }
 
     public void missed(boolean heroMissed) {
         if (heroMissed) {
-            this.textboxes.addInfoText("\n\nYou tried to attack your best, but missed your attack.");
+            this.textboxes.addInfoTextOld("\n\nYou tried to attack your best, but missed your attack.");
         } else {
-            this.textboxes.addInfoText("\n\n" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
+            this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
         }
     }
 
     public void hit(int damage, boolean heroAttacked, String how) {
         if (heroAttacked) {
-            this.textboxes.addInfoText("\n\nYou attacked the " + this.enemy.getName() + how + ", "
+            this.textboxes.addInfoTextOld("\n\nYou attacked the " + this.enemy.getName() + how + ", "
                     + "dealing " + damage + " damage!");
             enemyGetsHit(damage);
         } else {
-            this.textboxes.addInfoText("\n\n" + this.enemy.getName() + " attacked you" + how + ", "
+            this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName() + " attacked you" + how + ", "
                     + "dealing " + damage + " damage!");
-            this.hero.getHit(damage);
-            this.textboxes.updateHeroText(this.hero.getText());
+            this.hero.gotDamaged(damage);
+            this.textboxes.updateHeroTextOld(this.hero.getText());
         }
     }
 
@@ -145,7 +147,7 @@ public class Logics {
 
     private void enemyDroppedPotion() {
         this.hero.giveHealthPotions(1);
-        this.textboxes.addInfoText("\n\nThe " + this.enemy.getName() + " dropped "
+        this.textboxes.addInfoTextOld("\n\nThe " + this.enemy.getName() + " dropped "
                 + "a health potion. Now you have " + numberToString(this.hero.getHealthPotions()) + " health potions!");
     }
 
@@ -182,6 +184,24 @@ public class Logics {
             return "one";
         }
         return "no";
+    }
+
+    public void activateButtons() {
+        this.buttons.getAll().forEach(button -> {
+            button.setDisable(false);
+        });
+    }
+
+    public void disactivateButtons() {
+        this.buttons.getAll().forEach(button -> {
+            button.setDisable(true);
+        });
+    }
+
+    public void updateTextBoxes() {
+        this.textboxes.updateHeroText();
+        this.textboxes.updateEnemyText();
+        this.textboxes.updateInfoText();
     }
 
 }

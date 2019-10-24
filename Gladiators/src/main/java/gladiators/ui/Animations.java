@@ -15,6 +15,7 @@ public class Animations {
     private Animation heroIdle;
     private Animation heroQuick;
     private Animation heroHeavy;
+    private Animation heroPotion;
     private Animation enemyIdle;
     private Animation enemyQuick;
     private Animation enemyHeavy;
@@ -22,7 +23,10 @@ public class Animations {
     public Animations() {
     }
 
-    private void animationInit() {
+    public void createHeroIdle(String path, int speed) {
+        this.heroIdle = new AnimatedGif(path, speed);
+        this.heroIdle.setCycleCount(-1);
+        this.heroIdle.imageView = setImageSettings(this.heroIdle.imageView, true);
     }
 
     public void createHeroQuick(String path, int speed) {
@@ -35,34 +39,30 @@ public class Animations {
         this.heroHeavy = new AnimatedGif(path, speed);
         this.heroHeavy.setCycleCount(1);
         this.heroHeavy.imageView = setImageSettings(this.heroHeavy.imageView, true);
-
     }
 
-    public void createEnemyQuick(String path, int speed) {
-        this.enemyQuick = new AnimatedGif(path, speed);
-        this.enemyQuick.setCycleCount(1);
-        this.enemyQuick.imageView = setImageSettings(this.enemyQuick.imageView, false);
-
-    }
-
-    public void createEnemyHeavy(String path, int speed) {
-        this.enemyHeavy = new AnimatedGif(path, speed);
-        this.enemyHeavy.setCycleCount(1);
-        this.enemyHeavy.imageView = setImageSettings(this.enemyHeavy.imageView, false);
-
-    }
-
-    public void createHeroIdle(String path, int speed) {
-        this.heroIdle = new AnimatedGif(path, speed);
-        this.heroIdle.setCycleCount(-1);
-        this.heroIdle.imageView = setImageSettings(this.heroIdle.imageView, true);
-
+    public void createHeroPotion(String path, int speed) {
+        this.heroPotion = new AnimatedGif(path, speed);
+        this.heroPotion.setCycleCount(1);
+        this.heroPotion.imageView = setImageSettings(this.heroPotion.imageView, true);
     }
 
     public void createEnemyIdle(String path, int speed) {
         this.enemyIdle = new AnimatedGif(path, speed);
         this.enemyIdle.setCycleCount(-1);
         this.enemyIdle.imageView = setImageSettings(this.enemyIdle.imageView, false);
+    }
+
+    public void createEnemyQuick(String path, int speed) {
+        this.enemyQuick = new AnimatedGif(path, speed);
+        this.enemyQuick.setCycleCount(1);
+        this.enemyQuick.imageView = setImageSettings(this.enemyQuick.imageView, false);
+    }
+
+    public void createEnemyHeavy(String path, int speed) {
+        this.enemyHeavy = new AnimatedGif(path, speed);
+        this.enemyHeavy.setCycleCount(1);
+        this.enemyHeavy.imageView = setImageSettings(this.enemyHeavy.imageView, false);
 
     }
 
@@ -89,6 +89,10 @@ public class Animations {
         return heroHeavy;
     }
 
+    public Animation getHeroPotion() {
+        return heroPotion;
+    }
+
     public Animation getEnemyIdle() {
         return enemyIdle;
     }
@@ -99,6 +103,28 @@ public class Animations {
 
     public Animation getEnemyHeavy() {
         return enemyHeavy;
+    }
+
+    public String getAnimationToString(Animation ani) {
+        if (ani.equals(this.heroIdle)) {
+            return "heroIdle";
+        }
+        if (ani.equals(this.heroQuick)) {
+            return "heroQuick";
+        }
+        if (ani.equals(this.heroHeavy)) {
+            return "heroHeavy";
+        }
+        if (ani.equals(this.enemyIdle)) {
+            return "enemyIdle";
+        }
+        if (ani.equals(this.enemyQuick)) {
+            return "enemyQuick";
+        }
+        if (ani.equals(this.enemyHeavy)) {
+            return "enemyHeavy";
+        }
+        return null;
     }
 
     public class AnimatedGif extends Animation {

@@ -8,11 +8,17 @@ public class TextBoxes {
     private TextArea heroText;
     private TextArea enemyText;
     private TextArea infoText;
+    private TextArea heroTextOld;
+    private TextArea enemyTextOld;
+    private TextArea infoTextOld;
 
     public TextBoxes() {
         this.heroText = new TextArea();
         this.enemyText = new TextArea();
         this.infoText = new TextArea();
+        this.heroTextOld = new TextArea();
+        this.enemyTextOld = new TextArea();
+        this.infoTextOld = new TextArea();
     }
 
     public TextArea getInfoText() {
@@ -26,8 +32,6 @@ public class TextBoxes {
     public TextArea getEnemyText() {
         return enemyText;
     }
-    
-    
 
     public void createEnemyText(String enemyText) {
         this.enemyText.setTranslateX(570);
@@ -36,6 +40,7 @@ public class TextBoxes {
         this.enemyText.setFont(new Font("Font.ARIEL", 25));
         this.enemyText.setEditable(false);
         this.enemyText.setText(enemyText);
+        this.enemyTextOld.setText(enemyText);
     }
 
     public void createHeroText(String heroText) {
@@ -45,6 +50,7 @@ public class TextBoxes {
         this.heroText.setFont(new Font("Font.ARIEL", 25));
         this.heroText.setEditable(false);
         this.heroText.setText(heroText);
+        this.heroTextOld.setText(heroText);
     }
 
     public void createInfoText(String heroName, String enemyName) {
@@ -56,18 +62,32 @@ public class TextBoxes {
         this.infoText.setEditable(false);
         this.infoText.setText("Welcome to the arena " + heroName + "!\n"
                 + "Your first challenger is " + enemyName + ".");
+        this.infoTextOld.setText(this.infoText.getText());
     }
 
-    public void updateEnemyText(String enemyText) {
-        this.enemyText.setText(enemyText);
+    public void updateEnemyTextOld(String enemyText) {
+        this.enemyTextOld.setText(enemyText);
     }
-    
-    public void updateHeroText(String heroText) {
-        this.heroText.setText(heroText);
+
+    public void updateHeroTextOld(String heroText) {
+        this.heroTextOld.setText(heroText);
     }
-    
-    public void addInfoText(String text) {
-        this.infoText.setText(this.infoText.getText() + text);
+
+    public void addInfoTextOld(String text) {
+        this.infoTextOld.setText(this.infoTextOld.getText() + text);
+        this.infoTextOld.appendText("");
+    }
+
+    public void updateHeroText() {
+       this.heroText.setText(this.heroTextOld.getText());
+    }
+
+    public void updateEnemyText() {
+        this.enemyText.setText(this.enemyTextOld.getText());
+    }
+
+    public void updateInfoText() {
+        this.infoText.setText(this.infoTextOld.getText());
         this.infoText.appendText("");
     }
 

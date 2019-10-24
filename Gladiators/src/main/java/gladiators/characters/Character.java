@@ -1,15 +1,12 @@
 package gladiators.characters;
 
 import java.util.Random;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class Character {
 
     private String name;
     private int hitpoints;
     private int maxHP;
-    private int healthPotions;
     private int accuracy;
     private int strength;
     private Random random;
@@ -20,11 +17,13 @@ public class Character {
     private int quickSpeed;
     private int heavySpeed;
 
-    public Character(String name, int maxHP, int accuracy, int strength, String idlePath, int idleSpeed, String quickPath, int quickSpeed, String heavyPath, int heavySpeed) {
+    public Character(String name, int maxHP, int accuracy, int strength,
+            String idlePath, int idleSpeed,
+            String quickPath, int quickSpeed,
+            String heavyPath, int heavySpeed) {
         this.name = name;
         this.maxHP = maxHP;
         this.hitpoints = maxHP;
-        this.healthPotions = 0;
         this.accuracy = accuracy;
         this.strength = strength;
         this.random = new Random();
@@ -64,29 +63,14 @@ public class Character {
         return name;
     }
 
-    public int getHealthPotions() {
-        return healthPotions;
-    }
-
-    public void giveHealthPotions(int howMany) {
-        if (howMany > 0) {
-            this.healthPotions += howMany;
-        }
-    }
-
-    public boolean drinkHealthPotion() {
-        if (this.healthPotions == 0) {
-            return false;
-        }
-        this.healthPotions--;
+    public void heal(int howMuch) {
         this.hitpoints += 50;
         if (this.hitpoints > this.maxHP) {
             this.hitpoints = this.maxHP;
         }
-        return true;
     }
 
-    public void getHit(int dealtDamage) {
+    public void gotDamaged(int dealtDamage) {
         this.hitpoints -= dealtDamage;
         if (this.hitpoints < 0) {
             this.hitpoints = 0;
