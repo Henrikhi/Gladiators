@@ -26,14 +26,14 @@ public class Enemies {
                 "file:../Files/Images/Characters/Goblin/goblinIdle.gif", 1000, //1000
                 "file:../Files/Images/Characters/Goblin/goblinQuick.gif", 1000, //1000
                 "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 2500, //2500
-                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 2500, //2500
-                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 2500); //2500
+                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 1000, //2500
+                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 1000); //2500
         Character gnome = new Character("Gnome", 50, 100, 15,
                 "file:../Files/Images/Characters/Gnome/gnomeIdle.gif", 1500, //1500
                 "file:../Files/Images/Characters/Gnome/gnomeQuick.gif", 1500, //1500
                 "file:../Files/Images/Characters/Gnome/gnomeHeavy.gif", 3000, //3000
                 "file:../Files/Images/Characters/Gnome/gnomeEntry.gif", 3000, //3000
-                "file:../Files/Images/Characters/Gnome/gnomeHeavy.gif", 3000); //3000
+                "file:../Files/Images/Characters/Gnome/gnomeDeath.gif", 8000); //3000
         Character slime = new Character("Slime", 100, 60, 25,
                 "file:../Files/Images/Characters/Slime/slimeIdle.gif", 1000, //1000
                 "file:../Files/Images/Characters/Slime/slimeQuick.gif", 1000, //1000

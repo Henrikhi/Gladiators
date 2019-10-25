@@ -64,12 +64,10 @@ public class TextBoxes {
     public void createInfoText(String heroName, String enemyName) {
         this.infoText.setTranslateX(488);
         this.infoText.setTranslateY(452);
-        this.infoText.setPrefSize(310, 147);
+        this.infoText.setPrefSize(310, 147); //310, 147
         this.infoText.setWrapText(true);
         this.infoText.setEditable(false);
         this.infoText.setFont(fontInfo);
-        this.infoText.setText("Welcome to the arena " + heroName + "!\n"
-                + "Your first challenger is " + enemyName + ".");
         this.infoTextOld.setText(this.infoText.getText());
     }
 
@@ -82,8 +80,12 @@ public class TextBoxes {
     }
 
     public void addInfoTextOld(String text) {
-        this.infoTextOld.setText(this.infoTextOld.getText() + text);
-        this.infoTextOld.appendText("");
+        if (this.infoTextOld.getText().equals("")) {
+            this.infoTextOld.setText(text);
+        } else {
+            this.infoTextOld.setText(this.infoTextOld.getText() + "\n\n" + text);
+            this.infoTextOld.appendText("");
+        }
     }
 
     public void updateHeroText() {

@@ -98,7 +98,7 @@ public class Animations {
             gif.setTranslateX(10); //10
             gif.setTranslateY(-40); //-40
         } else {
-            gif.setTranslateX(180); //180
+            gif.setTranslateX(170); //170
             gif.setTranslateY(0); //0
         }
         return gif;

@@ -14,7 +14,6 @@ public class GladiatorMain extends Application {
     private Pane screen;
     private Music music;
     private Animations animations;
-    private int animationsRunning = 0;
 
     public static void main(String[] args) {
         launch(args);
@@ -25,11 +24,12 @@ public class GladiatorMain extends Application {
 
         this.gamelogics = new Logics("Jukka");
         this.animations = new Animations();
-        animationInit();
         this.screen = initScreen();
         this.music = new Music();
 
-//        this.music.playRandom();
+        this.music.playRandom();
+        
+        
         this.gamelogics.getButtons().getQuickButton().setOnMouseClicked(click -> {
             quickClicked();
         });
@@ -46,6 +46,8 @@ public class GladiatorMain extends Application {
             menuClicked();
         });
 
+        animateEntries();
+
         stage.setScene(new Scene(screen));
         stage.setTitle("Gladiator");
         stage.setResizable(false);
@@ -56,7 +58,7 @@ public class GladiatorMain extends Application {
         Pane screen = new Pane();
         BackGround bg = new BackGround();
 
-        screen.setPrefSize(800, 600);
+        screen.setPrefSize(790, 590); //this should be 800x600
 
         screen.getChildren().add(bg.getImageview());
         this.gamelogics.getButtons().getAll().forEach(button -> {
@@ -66,23 +68,7 @@ public class GladiatorMain extends Application {
         screen.getChildren().add(this.gamelogics.getTextboxes().getEnemyText());
         screen.getChildren().add(this.gamelogics.getTextboxes().getInfoText());
 
-        screen.getChildren().add(this.animations.getHeroIdle().getView());
-        screen.getChildren().add(this.animations.getEnemyIdle().getView());
-
         return screen;
-    }
-
-    private void animationInit() {
-        this.animations.createHeroIdle(this.gamelogics.getHero().getIdlePath(), this.gamelogics.getHero().getIdleSpeed());
-        this.animations.createHeroQuick(this.gamelogics.getHero().getQuickPath(), this.gamelogics.getHero().getQuickSpeed());
-        this.animations.createHeroHeavy(this.gamelogics.getHero().getHeavyPath(), this.gamelogics.getHero().getHeavySpeed());
-        this.animations.createHeroPotion(this.gamelogics.getHero().getPotionPath(), this.gamelogics.getHero().getPotionSpeed());
-        this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
-        this.animations.createEnemyQuick(this.gamelogics.getEnemy().getQuickPath(), this.gamelogics.getEnemy().getQuickSpeed());
-        this.animations.createEnemyHeavy(this.gamelogics.getEnemy().getHeavyPath(), this.gamelogics.getEnemy().getHeavySpeed());
-
-        this.animations.getHeroIdle().play();
-        this.animations.getEnemyIdle().play();
     }
 
     private void quickClicked() {
@@ -121,6 +107,38 @@ public class GladiatorMain extends Application {
         System.exit(0);
     }
 
+    private void animateEntries() {
+        this.gamelogics.disactivateButtons();
+        this.animations.createHeroEntry(this.gamelogics.getHero().getEntryPath(), this.gamelogics.getHero().getEntrySpeed());
+        this.animations.createHeroDeath(this.gamelogics.getHero().getDeathPath(), this.gamelogics.getHero().getDeathSpeed());
+        this.animations.createHeroQuick(this.gamelogics.getHero().getQuickPath(), this.gamelogics.getHero().getQuickSpeed());
+        this.animations.createHeroHeavy(this.gamelogics.getHero().getHeavyPath(), this.gamelogics.getHero().getHeavySpeed());
+        this.animations.createHeroPotion(this.gamelogics.getHero().getPotionPath(), this.gamelogics.getHero().getPotionSpeed());
+
+        this.animations.createHeroIdle(this.gamelogics.getHero().getIdlePath(), this.gamelogics.getHero().getIdleSpeed());
+        this.screen.getChildren().add(this.animations.getHeroEntry().getView());
+        this.animations.getHeroEntry().play();
+        this.animations.getHeroEntry().setOnFinished(heroEntryDone -> {
+            this.gamelogics.heroEntryDone();
+            this.gamelogics.updateTextBoxes();
+            this.screen.getChildren().remove(this.animations.getHeroEntry().getView());
+            this.screen.getChildren().add(this.animations.getHeroIdle().getView());
+            this.animations.getHeroIdle().play();
+            this.animations.createEnemyEntry(this.gamelogics.getEnemy().getEntryPath(), this.gamelogics.getEnemy().getEntrySpeed());
+            this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
+            this.screen.getChildren().add(this.animations.getEnemyEntry().getView());
+            this.animations.getEnemyEntry().play();
+            this.animations.getEnemyEntry().setOnFinished(enemyEntryDone -> {
+                this.gamelogics.enemyEntryDone();
+                this.gamelogics.updateTextBoxes();
+                this.screen.getChildren().remove(this.animations.getEnemyEntry().getView());
+                this.screen.getChildren().add(this.animations.getEnemyIdle().getView());
+                this.animations.getEnemyIdle().play();
+                this.gamelogics.activateButtons();
+            });
+        });
+    }
+
     private void animateHero(Animation action, Animation idle) {
         this.gamelogics.disactivateButtons();
         this.screen.getChildren().add(action.getView());
@@ -128,6 +146,7 @@ public class GladiatorMain extends Application {
         action.setOnFinished(actionEnds -> {
             this.screen.getChildren().remove(action.getView());
             this.screen.getChildren().add(idle.getView());
+            idle.play();
             this.gamelogics.updateTextBoxes();
             enemyTurn();
         });
@@ -135,10 +154,13 @@ public class GladiatorMain extends Application {
 
     private void animateEnemy(Animation action, Animation idle) {
         this.screen.getChildren().add(action.getView());
+        this.screen.getChildren().remove(this.animations.getHeroIdle().getView());
+        this.screen.getChildren().add(this.animations.getHeroIdle().getView());
         action.play();
         action.setOnFinished(actionEnds -> {
             this.screen.getChildren().remove(action.getView());
             this.screen.getChildren().add(idle.getView());
+            idle.play();
             this.gamelogics.activateButtons();
             this.gamelogics.updateTextBoxes();
         });
@@ -159,10 +181,6 @@ public class GladiatorMain extends Application {
         animateHero(this.animations.getHeroHeavy(), this.animations.getHeroIdle());
     }
 
-    private void animateHeroEntry() {
-
-    }
-
     private void animateHeroDeath() {
 
     }
@@ -180,6 +198,7 @@ public class GladiatorMain extends Application {
     }
 
     private void animateEnemyEntry() {
+        this.animations.createEnemyIdle(this.gamelogics.getEnemy().getIdlePath(), this.gamelogics.getEnemy().getIdleSpeed());
         this.animations.createEnemyEntry(this.gamelogics.getEnemy().getEntryPath(), this.gamelogics.getEnemy().getEntrySpeed());
         animateEnemy(this.animations.getEnemyEntry(), this.animations.getEnemyIdle());
     }
@@ -191,7 +210,7 @@ public class GladiatorMain extends Application {
         this.animations.getEnemyDeath().play();
         this.animations.getEnemyDeath().setOnFinished(actionEnds -> {
             this.screen.getChildren().remove(this.animations.getEnemyDeath().getView());
-            this.gamelogics.enemyDied();
+            this.gamelogics.newEnemy();
             animateEnemyEntry();
         });
     }
@@ -207,6 +226,7 @@ public class GladiatorMain extends Application {
                 this.gamelogics.enemyAttack(false);
             }
         } else {
+            this.gamelogics.enemyDied();
             animateEnemyDeath();
         }
     }

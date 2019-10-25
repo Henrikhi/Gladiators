@@ -62,21 +62,25 @@ public class Logics {
 
     public void enemyDied() {
         this.hero.addKill();
-        this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName()
+        this.textboxes.addInfoTextOld(this.enemy.getName()
                 + " did not survive your final blow.");
 
         if (this.random.nextInt(2) == 1) {
             enemyDroppedPotion();
         }
+        updateTextBoxes();
+    }
+
+    public void newEnemy() {
         this.enemy = this.enemies.randomEnemy();
         this.textboxes.updateEnemyTextOld(this.enemy.getText());
-        this.textboxes.addInfoTextOld("\n\nA new opponent "
+        this.textboxes.addInfoTextOld("A new opponent "
                 + this.enemy.getName() + " has accepted your challenge!");
     }
 
     public boolean RecoverClicked() {
         if (this.hero.drinkHealthPotion()) {
-            this.textboxes.addInfoTextOld("\n\nYou drank a magical "
+            this.textboxes.addInfoTextOld("You drank a magical "
                     + "potion and now you feel refreshed, hydrated and ready to "
                     + "continue the fight! You have "
                     + numberToString(this.hero.getHealthPotions())
@@ -84,7 +88,7 @@ public class Logics {
             this.textboxes.updateHeroTextOld(this.hero.getText());
             return true;
         } else {
-            this.textboxes.addInfoTextOld("\n\nYou do not have "
+            this.textboxes.addInfoTextOld("You do not have "
                     + "any magical potions left. What a shame.");
             updateTextBoxes();
             return false;
@@ -96,25 +100,25 @@ public class Logics {
     }
 
     private void heroDied() {
-        this.textboxes.addInfoTextOld("\n\nYou died. You managed to defeat " + numberToString(this.hero.getKills())
+        this.textboxes.addInfoTextOld("You died. You managed to defeat " + numberToString(this.hero.getKills())
                 + " opponents before you died. Better luck next time!.");
     }
 
     public void missed(boolean heroMissed) {
         if (heroMissed) {
-            this.textboxes.addInfoTextOld("\n\nYou tried to attack your best, but missed your attack.");
+            this.textboxes.addInfoTextOld("You tried to attack your best, but missed your attack.");
         } else {
-            this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
+            this.textboxes.addInfoTextOld("" + this.enemy.getName() + " tried to attack you, but " + this.enemy.getName() + " missed.");
         }
     }
 
     public void hit(int damage, boolean heroAttacked, String how) {
         if (heroAttacked) {
-            this.textboxes.addInfoTextOld("\n\nYou attacked the " + this.enemy.getName() + how + ", "
+            this.textboxes.addInfoTextOld("You attacked the " + this.enemy.getName() + how + ", "
                     + "dealing " + damage + " damage!");
             enemyGetsHit(damage);
         } else {
-            this.textboxes.addInfoTextOld("\n\n" + this.enemy.getName() + " attacked you" + how + ", "
+            this.textboxes.addInfoTextOld("" + this.enemy.getName() + " attacked you" + how + ", "
                     + "dealing " + damage + " damage!");
             this.hero.gotDamaged(damage);
             this.textboxes.updateHeroTextOld(this.hero.getText());
@@ -147,7 +151,7 @@ public class Logics {
 
     private void enemyDroppedPotion() {
         this.hero.giveHealthPotions(1);
-        this.textboxes.addInfoTextOld("\n\nThe " + this.enemy.getName() + " dropped "
+        this.textboxes.addInfoTextOld("The " + this.enemy.getName() + " dropped "
                 + "a health potion. Now you have " + numberToString(this.hero.getHealthPotions()) + " health potions!");
     }
 
@@ -202,6 +206,14 @@ public class Logics {
         this.textboxes.updateHeroText();
         this.textboxes.updateEnemyText();
         this.textboxes.updateInfoText();
+    }
+
+    public void heroEntryDone() {
+        this.textboxes.addInfoTextOld("Welcome to the arena " + this.hero.getName() + "!");
+    }
+
+    public void enemyEntryDone() {
+        this.textboxes.addInfoTextOld("Your first challenger is " + this.enemy.getName() + ".");
     }
 
 }
