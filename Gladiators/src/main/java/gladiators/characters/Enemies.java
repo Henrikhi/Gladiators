@@ -42,7 +42,7 @@ public class Enemies {
                 "file:../Files/Images/Characters/Slime/slimeHeavy.gif", 1000); //1000
 
 //        this.enemies.add(cyclop);
-//        this.enemies.add(goblin);
+        this.enemies.add(goblin);
         this.enemies.add(gnome);
 //        this.enemies.add(slime);
     }
