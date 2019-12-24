@@ -20,7 +20,7 @@ public class GladiatorMain extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws InterruptedException {
 
         this.gamelogics = new Logics("Jukka");
         this.animations = new Animations();
@@ -28,8 +28,7 @@ public class GladiatorMain extends Application {
         this.music = new Music();
 
         this.music.playRandom();
-        
-        
+
         this.gamelogics.getButtons().getQuickButton().setOnMouseClicked(click -> {
             quickClicked();
         });
@@ -163,6 +162,10 @@ public class GladiatorMain extends Application {
             idle.play();
             this.gamelogics.activateButtons();
             this.gamelogics.updateTextBoxes();
+
+            if (!this.gamelogics.getHero().isAlive()) {
+                animateHeroDeath();
+            }
         });
     }
 
@@ -182,7 +185,7 @@ public class GladiatorMain extends Application {
     }
 
     private void animateHeroDeath() {
-
+        //hero death
     }
 
     private void animateEnemyQuick() {
@@ -225,6 +228,7 @@ public class GladiatorMain extends Application {
                 animateEnemyHeavy();
                 this.gamelogics.enemyAttack(false);
             }
+
         } else {
             this.gamelogics.enemyDied();
             animateEnemyDeath();

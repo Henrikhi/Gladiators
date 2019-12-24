@@ -8,7 +8,7 @@ public class Hero extends Character {
     private int potionSpeed;
 
     public Hero(String name) {
-        super(name, 100, 70, 30,
+        super(name, 100, 70, 30, //name, 100, 70, 30
                 "file:../Files/Images/Characters/Hero/heroIdle.gif", 2000,
                 "file:../Files/Images/Characters/Hero/heroQuick.gif", 1000,
                 "file:../Files/Images/Characters/Hero/heroHeavy.gif", 1000,

@@ -26,8 +26,8 @@ public class Enemies {
                 "file:../Files/Images/Characters/Goblin/goblinIdle.gif", 1000, //1000
                 "file:../Files/Images/Characters/Goblin/goblinQuick.gif", 1000, //1000
                 "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 2500, //2500
-                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 1000, //2500
-                "file:../Files/Images/Characters/Goblin/goblinHeavy.gif", 1000); //2500
+                "file:../Files/Images/Characters/Goblin/goblinEntry.gif", 7000, //7000
+                "file:../Files/Images/Characters/Goblin/goblinDeath.gif", 8000); //8000
         Character gnome = new Character("Gnome", 50, 100, 15,
                 "file:../Files/Images/Characters/Gnome/gnomeIdle.gif", 1500, //1500
                 "file:../Files/Images/Characters/Gnome/gnomeQuick.gif", 1500, //1500
